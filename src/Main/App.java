@@ -1,28 +1,38 @@
-package Main;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.util.Vector;
+/**
+    Copyright (c) 2014 Patrick Hillert <silent@gmx.biz>
 
-import PointProcessors.*;
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; version 3 of the License.
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-public class App {
-	private static Frame frame;
-	private static Vector<Point2D> points;
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 800;
-	private static final int NUMER_OF_POINTS = 5000;
-	
-	public static void main(String[] args) {;
-		frame = new Frame("QuickHull2D", WIDTH, HEIGHT);
-		
-		Random pointProcessor = new Random(NUMER_OF_POINTS, WIDTH, HEIGHT);
-		pointProcessor.run();
-		points = pointProcessor.getPoints();
-		
-		//QuickHull2D qh = new QuickHull2D();
-	}
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package main;
+
+/**
+ * Entry point for the QuickHull algorithm and test suite.
+ * This class runs the full benchmark tool.
+ */
+public final class App {
+    /**
+     * Hidden constructor.
+     */
+    private App() { }
+
+    /**
+     * Entry point.
+     *
+     * @param args Nothing needed.
+     */
+    public static void main(final String[] args) {
+        Benchmark bm = new Benchmark();
+        bm.runFullBenchmarkSuite();
+    }
 }
