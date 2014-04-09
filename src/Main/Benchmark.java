@@ -148,7 +148,7 @@ public class Benchmark {
             long startTime = System.nanoTime();
 
             QuickHullAlgorithm qh = new QuickHullAlgorithm(points);
-            Vector<Point> hullPoints = qh.getHullPoints();
+            /*Vector<Point> hullPoints = */qh.getHullPoints();
 
             elapsedRoundTimes[i] = ((System.nanoTime() - startTime)
                 / NANO_TO_MILLI);
