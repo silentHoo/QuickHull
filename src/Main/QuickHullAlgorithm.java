@@ -21,7 +21,7 @@
 
 package main;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * This algorithm calculates the convex hull for a given set of points.
@@ -32,12 +32,12 @@ public class QuickHullAlgorithm {
     /**
      * The set of points to use in the calculation.
      */
-    private Vector<Point> inputPoints;
+    private ArrayList<Point> inputPoints;
 
     /**
      * The resulting convex hull points after the algorithm has been executed.
      */
-    private Vector<Point> hullPoints;
+    private ArrayList<Point> hullPoints;
 
     /**
      * The maximum right point.
@@ -80,9 +80,9 @@ public class QuickHullAlgorithm {
      *
      * @param points The point cloud to put in.
      */
-    QuickHullAlgorithm(final Vector<Point> points) {
+    QuickHullAlgorithm(final ArrayList<Point> points) {
         inputPoints = points;
-        hullPoints = new Vector<Point>(); // initial empty
+        hullPoints = new ArrayList<Point>(); // initial empty
     }
 
     /**
@@ -93,7 +93,7 @@ public class QuickHullAlgorithm {
      * @return The point which corresponds to the query.
      */
     private Point getXPoint(final boolean leftside) {
-        Point pivot = inputPoints.firstElement();
+        Point pivot = inputPoints.get(0);
 
         for (Point p : inputPoints) {
             if ((leftside && p.getX() < pivot.getX()) /* min search */
@@ -110,7 +110,7 @@ public class QuickHullAlgorithm {
      *
      * @return A vector containing all convex hull points.
      */
-    public final Vector<Point> getHullPoints() {
+    public final ArrayList<Point> getHullPoints() {
         if (hullPoints.size() == 0) {
             // This is the first run with the maximum and minimum x value
             // points. The points are definitive points of the convex hull.
@@ -167,9 +167,9 @@ public class QuickHullAlgorithm {
      * @param second The second point of the line.
      * @return A vector containing all point distances.
      */
-    private Vector<PointDistance> getPointDistances(final Vector<Point> points,
+    private ArrayList<PointDistance> getPointDistances(final ArrayList<Point> points,
             final Point first, final Point second) {
-        Vector<PointDistance> pointDistanceSet = new Vector<PointDistance>();
+	ArrayList<PointDistance> pointDistanceSet = new ArrayList<PointDistance>();
 
         for (Point p : points) {
             double distanceToPoint = calcDistance(p, first, second);
@@ -191,7 +191,7 @@ public class QuickHullAlgorithm {
      * @return The point with the maximum distance to the given line.
      */
     private Point getPointWithMaximumDistanceFromLine(
-            final Vector<PointDistance> pointDistanceSet) {
+            final ArrayList<PointDistance> pointDistanceSet) {
         double maxDistance = 0;
         Point maxPoint = null;
 
@@ -217,18 +217,18 @@ public class QuickHullAlgorithm {
      * one.
      * @return A vector containing all the convex hull points on one side.
      */
-    private Vector<Point> quickHull(final Vector<Point> points,
+    private ArrayList<Point> quickHull(final ArrayList<Point> points,
             final Point first, final Point second) {
-        Vector<PointDistance> pointsLeftOfLine = getPointDistances(points,
+	ArrayList<PointDistance> pointsLeftOfLine = getPointDistances(points,
             first, second);
         Point newMaxPoint = getPointWithMaximumDistanceFromLine(
             pointsLeftOfLine);
 
-        Vector<Point> pointsToReturn = new Vector<Point>();
+        ArrayList<Point> pointsToReturn = new ArrayList<Point>();
         if (newMaxPoint == null) {
             pointsToReturn.add(second);
         } else {
-            Vector<Point> newPoints = new Vector<Point>();
+            ArrayList<Point> newPoints = new ArrayList<Point>();
             for (PointDistance pd : pointsLeftOfLine) {
                 newPoints.add(pd.p);
             }

@@ -16,7 +16,7 @@
 
 package pointGenerators;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import main.Point;
 
@@ -28,7 +28,7 @@ public class Rectangle implements IGenerator {
     /**
      * The generated points for the scenario.
      */
-    private static Vector<Point> points;
+    private static ArrayList<Point> points;
 
     /**
      * The number of points to generate.
@@ -57,7 +57,7 @@ public class Rectangle implements IGenerator {
         width = maxX;
         height = maxY;
 
-        points = new Vector<Point>();
+        points = new ArrayList<Point>();
     }
 
     /**
@@ -93,7 +93,7 @@ public class Rectangle implements IGenerator {
      * @see run() Execute run() before you get these points.
      * @return The generated points.
      */
-    public final Vector<Point> getPoints() {
+    public final ArrayList<Point> getPoints() {
         return points;
     }
 }

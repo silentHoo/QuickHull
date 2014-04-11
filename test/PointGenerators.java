@@ -14,10 +14,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Java dependencies
-import java.util.Vector;
-
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
 import main.Point;
 
 import org.junit.Before;
@@ -34,12 +34,12 @@ public class PointGenerators {
     /**
      * Points for the best case (rectangle).
      */
-    private Vector<Point> pointsRectangle;
+    private ArrayList<Point> pointsRectangle;
 
     /**
      * Points for the average case (circle).
      */
-    private Vector<Point> pointsCircle;
+    private ArrayList<Point> pointsCircle;
 
     /**
      * Points to generate for each case.
@@ -85,7 +85,7 @@ public class PointGenerators {
     @Test
     public final void rectanglePointsAreNotOutOfRange() {
         for (int i = 0; i < numberOfPoints; i++) {
-            Point p = pointsRectangle.elementAt(i);
+            Point p = pointsRectangle.get(i);
 
             // x between 0 and MAX_X
             assertTrue(p.getX() >= 0 && p.getX() <= cMaxX);
@@ -105,7 +105,7 @@ public class PointGenerators {
         int edgeCountY = 0;
 
         for (int i = 0; i < numberOfPoints; i++) {
-            Point p = pointsRectangle.elementAt(i);
+            Point p = pointsRectangle.get(i);
 
             if (p.getX() == cMaxX || p.getX() == 0) {
                 ++edgeCountX;
@@ -139,7 +139,7 @@ public class PointGenerators {
     @Test
     public final void circlePointsAreNotOutOfRange() {
         for (int i = 0; i < numberOfPoints; i++) {
-            Point p = pointsCircle.elementAt(i);
+            Point p = pointsCircle.get(i);
             assertTrue(p.getX() >= 0 && p.getX() <= cMaxX
                 && p.getY() >= 0 && p.getY() <= cMaxY);
         }

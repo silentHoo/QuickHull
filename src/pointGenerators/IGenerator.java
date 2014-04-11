@@ -16,7 +16,7 @@
 
 package pointGenerators;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import main.Point;
 
@@ -37,5 +37,5 @@ public interface IGenerator {
      * @see run() Execute run() before you get these points.
      * @return The generated points.
      */
-    Vector<Point> getPoints();
+    ArrayList<Point> getPoints();
 }

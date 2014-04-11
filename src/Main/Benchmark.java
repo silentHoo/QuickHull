@@ -16,8 +16,7 @@
 
 package main;
 
-import java.util.Vector;
-
+import java.util.ArrayList;
 import pointGenerators.*;
 
 /**
@@ -129,7 +128,7 @@ public class Benchmark {
             for (int i = 0; i < BENCHMARK_ROUNDS; i++) {
                     long startTime = System.nanoTime();
 
-                    Vector<Point> points = getPointsByType(type, n);
+                    ArrayList<Point> points = getPointsByType(type, n);
                     QuickHullAlgorithm qh = new QuickHullAlgorithm(points);
                     qh.getHullPoints();
 
@@ -159,7 +158,7 @@ public class Benchmark {
      * @param numberOfPoints The number of points to generate.
      * @return A vector containing all requested points.
      */
-    private Vector<Point> getPointsByType(final BenchmarkType type,
+    private ArrayList<Point> getPointsByType(final BenchmarkType type,
             final int numberOfPoints) {
         IGenerator pointGenerator = null;
 
