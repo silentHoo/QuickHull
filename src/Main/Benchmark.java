@@ -28,12 +28,12 @@ public class Benchmark {
     /**
      * The width of the bounding box / volume to generate points in.
      */
-    private static final int WIDTH = 800;
+    private static final int WIDTH = 8000;
 
     /**
      * The height of the bounding box / volume to generate points in.
      */
-    private static final int HEIGHT = 800;
+    private static final int HEIGHT = 8000;
 
     /**
      * The number of points to start benchmarking with.
@@ -43,7 +43,7 @@ public class Benchmark {
     /**
      * The number of points to end benchmarking with.
      */
-    private static final int NUMBER_POINTS_TO = 100000;
+    private static final int NUMBER_POINTS_TO = 1024000;
 
     /**
      * The factor to transform nano seconds to milli seconds.
@@ -65,11 +65,26 @@ public class Benchmark {
      * Higher will result in a better average value on the elapsed time
      * taken.
      */
-    private static final int BENCHMARK_ROUNDS = 5;
+    private static final int BENCHMARK_ROUNDS = 50;
     /**
      * The JFrame wrapper to show information.
      */
     private Frame frame;
+
+    /**
+     * The type of the benchmark.
+     */
+    public enum BenchmarkType {
+        /**
+         * 2D Best Case.
+         */
+        BEST_CASE_2D,
+
+        /**
+         * 2D average Case.
+         */
+        AVG_CASE_2D
+    };
 
     /**
      * Initializes a new Benchmark set.
@@ -85,12 +100,13 @@ public class Benchmark {
      *  - 2D average case (circle)
      */
     public final void runFullBenchmarkSuite() {
-        frame.updateLabel("... running full benchmark suite ...");
+        frame.updateLabel("1) Performing Benchmark for: 2D Best Case");
+        checkPerformance(BenchmarkType.BEST_CASE_2D);
 
-        checkPerformance2DBestCase();
-        checkPerformance2DAverageCase();
+        frame.updateLabel("2) Performing Benchmark for: 2D Average Case");
+        checkPerformance(BenchmarkType.AVG_CASE_2D);
 
-        frame.updateLabel("... done! ...");
+        frame.updateLabel("================== DONE ==================");
     }
 
     /**
@@ -102,64 +118,59 @@ public class Benchmark {
      *  - 2D in the Best Case O(n)
      *  - Description: Rectangle with four points on the corners and an
      *    average amounts of random points inside the rectangle.
-     */
-    public final void checkPerformance2DBestCase() {
-        frame.updateLabel("... running 2D best case ...");
-
-        for (int n = NUMBER_POINTS_FROM; n <= NUMBER_POINTS_TO; n = n * 2) {
-            Rectangle pointGenerator = new Rectangle(n, WIDTH, HEIGHT);
-            pointGenerator.run();
-            genericPerformanceCheck(pointGenerator.getPoints());
-        }
-    }
-
-    /**
-     * Measures the time of the QuickHull algorithm for several numbers of
-     * points, beginning with n = 500, then n = 1000, n = 2000, ... (double
-     * the points in every step).
      *
-     * Checks the performance for:
-     *  - 2D in the Average Case O(n log n)
-     *  - Description: Circle with several points on the border of the circle
-     *  with no points inside the circle.
+     *  @param type The benchmark type to check.
      */
-    public final void checkPerformance2DAverageCase() {
-        frame.updateLabel("... running 2D best case ...");
-
-        for (int n = NUMBER_POINTS_FROM; n <= NUMBER_POINTS_TO; n = n * 2) {
-            Circle pointGenerator = new Circle(n, WIDTH, HEIGHT);
-            pointGenerator.run();
-            genericPerformanceCheck(pointGenerator.getPoints());
-        }
-    }
-
-    /**
-     * Runs the performance benchmark on the given set of points.
-     * Every performance check is run the configured number of times
-     * to get the average amount of time consumed by the algorithm and not
-     * lack behind any garbage issues or something like that.
-     *
-     * @param points The points to run the benchmark on.
-     */
-    private void genericPerformanceCheck(final Vector<Point> points) {
+    public final void checkPerformance(final BenchmarkType type) {
         double[] elapsedRoundTimes = new double[BENCHMARK_ROUNDS];
+        double averageTimeLast = 0.0;
 
-        for (int i = 0; i < elapsedRoundTimes.length; i++) {
-            long startTime = System.nanoTime();
+        for (int n = NUMBER_POINTS_FROM; n <= NUMBER_POINTS_TO; n = n * 2) {
+            for (int i = 0; i < BENCHMARK_ROUNDS; i++) {
+                    long startTime = System.nanoTime();
 
-            QuickHullAlgorithm qh = new QuickHullAlgorithm(points);
-            /*Vector<Point> hullPoints = */qh.getHullPoints();
+                    Vector<Point> points = getPointsByType(type, n);
+                    QuickHullAlgorithm qh = new QuickHullAlgorithm(points);
+                    qh.getHullPoints();
 
-            elapsedRoundTimes[i] = ((System.nanoTime() - startTime)
-                / NANO_TO_MILLI);
+                    elapsedRoundTimes[i] = ((System.nanoTime() - startTime)
+                            / NANO_TO_MILLI);
+            }
+
+            double averageTime = 0.0;
+            for (double rt : elapsedRoundTimes) {
+                averageTime += rt;
+            }
+            averageTime /= elapsedRoundTimes.length;
+
+            System.out.format("n = %06d\t t = %05d \t rounds = %d\t "
+               + "ratio = %f\n",
+                   n, (int) averageTime, BENCHMARK_ROUNDS,
+                   averageTime / averageTimeLast);
+
+            averageTimeLast = averageTime;
+        }
+    }
+
+    /**
+     * Generates the given number of points for the given benchmark situation.
+     *
+     * @param type The benchmark type.
+     * @param numberOfPoints The number of points to generate.
+     * @return A vector containing all requested points.
+     */
+    private Vector<Point> getPointsByType(final BenchmarkType type,
+            final int numberOfPoints) {
+        IGenerator pointGenerator = null;
+
+        if (type == BenchmarkType.BEST_CASE_2D) {
+            pointGenerator = new Rectangle(numberOfPoints, WIDTH, HEIGHT);
+        } else if (type == BenchmarkType.AVG_CASE_2D) {
+            pointGenerator = new Circle(numberOfPoints, WIDTH, HEIGHT);
         }
 
-        double averageTime = 0.0;
-        for (double rt : elapsedRoundTimes) {
-            averageTime += rt;
-        }
-        averageTime /= elapsedRoundTimes.length;
+        pointGenerator.run();
 
-        System.out.format("n = %d, t = %d\n", points.size(), (int) averageTime);
+        return pointGenerator.getPoints();
     }
 }

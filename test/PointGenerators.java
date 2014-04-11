@@ -140,8 +140,8 @@ public class PointGenerators {
     public final void circlePointsAreNotOutOfRange() {
         for (int i = 0; i < numberOfPoints; i++) {
             Point p = pointsCircle.elementAt(i);
-            assertTrue(p.getX() >= 0 && p.getX() <= cMaxX);
-            assertTrue(p.getY() >= 0 && p.getY() <= cMaxY);
+            assertTrue(p.getX() >= 0 && p.getX() <= cMaxX
+                && p.getY() >= 0 && p.getY() <= cMaxY);
         }
     }
 }

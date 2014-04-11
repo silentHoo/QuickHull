@@ -44,7 +44,7 @@ public class Frame extends JFrame {
      * @param height The height in pixels of the window.
      */
     Frame(final String title, final int width, final int height) {
-        JFrame frame = new JFrame(title);
+        /*
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         textLabel = new JLabel("Nothing here.", SwingConstants.CENTER);
@@ -55,6 +55,7 @@ public class Frame extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
+        */
     }
 
     /**
@@ -63,6 +64,7 @@ public class Frame extends JFrame {
      * @param text The new text which replaces the current.
      */
     public final void updateLabel(final String text) {
-        textLabel.setText(text);
+        //textLabel.setText(text);
+        System.out.println(text);
     }
 }
