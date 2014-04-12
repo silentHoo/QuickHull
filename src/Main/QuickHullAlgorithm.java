@@ -56,12 +56,12 @@ public class QuickHullAlgorithm {
         /**
          * The point.
          */
-        protected Point p;
+        private Point p;
 
         /**
          * The distance to that point.
          */
-        protected double distance;
+        private double distance;
 
         /**
          * Creates a new PointDistance.
@@ -80,7 +80,7 @@ public class QuickHullAlgorithm {
      *
      * @param points The point cloud to put in.
      */
-    QuickHullAlgorithm(final ArrayList<Point> points) {
+    public QuickHullAlgorithm(final ArrayList<Point> points) {
         inputPoints = points;
         hullPoints = new ArrayList<Point>(); // initial empty
     }
@@ -142,7 +142,7 @@ public class QuickHullAlgorithm {
      * @param secondLinePoint The second (end) point of the line.
      * @return The distance between the line and the given point.
      */
-    private double calcDistance(final Point pointToCalcDistanceTo,
+    private double calcDistanceIndicator(final Point pointToCalcDistanceTo,
             final Point firstLinePoint, final Point secondLinePoint) {
         double[] vLine = new double[2];
         vLine[0] = secondLinePoint.getX() - firstLinePoint.getX();
@@ -167,21 +167,22 @@ public class QuickHullAlgorithm {
      * @param second The second point of the line.
      * @return A vector containing all point distances.
      */
-    private ArrayList<PointDistance> getPointDistances(final ArrayList<Point> points,
-            final Point first, final Point second) {
-	ArrayList<PointDistance> pointDistanceSet = new ArrayList<PointDistance>();
+    private ArrayList<PointDistance> getPointDistances(
+            final ArrayList<Point> points, final Point first,
+            final Point second) {
+        ArrayList<PointDistance> ptDistanceSet = new ArrayList<PointDistance>();
 
         for (Point p : points) {
-            double distanceToPoint = calcDistance(p, first, second);
+            double distanceToPoint = calcDistanceIndicator(p, first, second);
 
             if (distanceToPoint > 0) {
-                pointDistanceSet.add(new PointDistance(p, distanceToPoint));
+                ptDistanceSet.add(new PointDistance(p, distanceToPoint));
             } else {
                 continue;
             }
         }
 
-        return pointDistanceSet;
+        return ptDistanceSet;
     }
 
     /**
@@ -219,7 +220,7 @@ public class QuickHullAlgorithm {
      */
     private ArrayList<Point> quickHull(final ArrayList<Point> points,
             final Point first, final Point second) {
-	ArrayList<PointDistance> pointsLeftOfLine = getPointDistances(points,
+        ArrayList<PointDistance> pointsLeftOfLine = getPointDistances(points,
             first, second);
         Point newMaxPoint = getPointWithMaximumDistanceFromLine(
             pointsLeftOfLine);
