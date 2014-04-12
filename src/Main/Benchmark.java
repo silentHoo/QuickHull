@@ -17,7 +17,8 @@
 package main;
 
 import java.util.ArrayList;
-import pointGenerators.*;
+
+import pointgenerators.*;
 
 /**
  * This class provides methods to benchmark the algorithms performance for
@@ -27,12 +28,12 @@ public class Benchmark {
     /**
      * The width of the bounding box / volume to generate points in.
      */
-    private static final int WIDTH = 8000;
+    private static final int WIDTH = 10000;
 
     /**
      * The height of the bounding box / volume to generate points in.
      */
-    private static final int HEIGHT = 8000;
+    private static final int HEIGHT = 10000;
 
     /**
      * The number of points to start benchmarking with.
@@ -64,7 +65,7 @@ public class Benchmark {
      * Higher will result in a better average value on the elapsed time
      * taken.
      */
-    private static final int BENCHMARK_ROUNDS = 50;
+    private static final int BENCHMARK_ROUNDS = 1000;
     /**
      * The JFrame wrapper to show information.
      */
@@ -125,10 +126,11 @@ public class Benchmark {
         double averageTimeLast = 0.0;
 
         for (int n = NUMBER_POINTS_FROM; n <= NUMBER_POINTS_TO; n = n * 2) {
+            ArrayList<Point> points = getPointsByType(type, n);
+
             for (int i = 0; i < BENCHMARK_ROUNDS; i++) {
                     long startTime = System.nanoTime();
 
-                    ArrayList<Point> points = getPointsByType(type, n);
                     QuickHullAlgorithm qh = new QuickHullAlgorithm(points);
                     qh.getHullPoints();
 
@@ -142,10 +144,13 @@ public class Benchmark {
             }
             averageTime /= elapsedRoundTimes.length;
 
-            System.out.format("n = %06d\t t = %05d \t rounds = %d\t "
+            /*System.out.format("n = %06d\t t = %05f \t rounds = %d\t "
                + "ratio = %f\n",
-                   n, (int) averageTime, BENCHMARK_ROUNDS,
-                   averageTime / averageTimeLast);
+                   n, averageTime, BENCHMARK_ROUNDS,
+                   averageTime / averageTimeLast);*/
+
+            System.out.format("%d \t & %.2f & \t %.2f \\\\ \n",
+                        n, averageTime, (averageTime / averageTimeLast));
 
             averageTimeLast = averageTime;
         }
