@@ -22,9 +22,9 @@ import main.Point;
 
 /**
  * Provides an IGenerator interface and implements methods to generate points
- * for the average case.
+ * for the best case.
  */
-public class Circle implements IGenerator {
+public class Random implements IGenerator {
     /**
      * The generated points for the scenario.
      */
@@ -36,9 +36,14 @@ public class Circle implements IGenerator {
     private int pointsToGenerate;
 
     /**
-     * The radius of the circle.
+     * The bounding box dimension along the x-axis.
      */
-    private int radius;
+    private int width;
+
+    /**
+     * The bounding box dimension along the y-axis.
+     */
+    private int height;
 
     /**
      * Initializes the new rectangle with the given parameters.
@@ -47,9 +52,10 @@ public class Circle implements IGenerator {
      * @param maxX The maximum width of the bounding box window.
      * @param maxY The maximum height of the bounding box window.
      */
-    public Circle(final int numberOfPoints, final int maxX, final int maxY) {
+    public Random(final int numberOfPoints, final int maxX, final int maxY) {
         pointsToGenerate = numberOfPoints;
-        radius = (int) Math.floor(Math.min(maxX, maxY) / 2);
+        width = maxX;
+        height = maxY;
 
         points = new ArrayList<Point>();
     }
@@ -58,22 +64,16 @@ public class Circle implements IGenerator {
      * Runs the generation process.
      */
     public final void run() {
-        final double fullCircleDegree = 360.0;
-        double angleInDegree = fullCircleDegree / (double) pointsToGenerate;
-
-        int segmentCounter = 1;
         while (pointsToGenerate > 0) {
-            double angleInRadian = segmentCounter * angleInDegree
-                * (Math.PI / (fullCircleDegree / 2.0));
-            double x = (double) (radius * Math.cos(angleInRadian))
-                + radius /* origin */;
-            double y = (double) (radius * Math.sin(angleInRadian))
-                + radius /* origin */;
+            double x, y = 0;
+            do {
+                x = Math.random() * width;
+                y = Math.random() * height;
+            } while(x == 0 || x == width || y == 0 || y == height);
 
             points.add(new Point(x, y));
 
             --pointsToGenerate;
-            ++segmentCounter;
         }
     }
 
