@@ -19,6 +19,9 @@ import main.Point;
 
 import org.junit.Test;
 
+/**
+ * Test class for the points.
+ */
 public class PointTest {
 
     /**

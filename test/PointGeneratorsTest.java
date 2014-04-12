@@ -23,14 +23,14 @@ import main.Point;
 import org.junit.Before;
 import org.junit.Test;
 
-import pointGenerators.*;
+import pointgenerators.*;
 
 /**
  * This class provides methods for testing the PointGenerators.
  *
  * @author Patrick Hillert <silent@gmx.biz>
  */
-public class PointGenerators {
+public class PointGeneratorsTest {
     /**
      * Points for the best case (rectangle).
      */
@@ -40,6 +40,11 @@ public class PointGenerators {
      * Points for the average case (circle).
      */
     private ArrayList<Point> pointsCircle;
+
+    /**
+     * Points for the fully random case.
+     */
+    private ArrayList<Point> pointsRandom;
 
     /**
      * Points to generate for each case.
@@ -67,6 +72,11 @@ public class PointGenerators {
         Circle pointProcessorCircle = new Circle(numberOfPoints, cMaxX, cMaxY);
         pointProcessorCircle.run();
         pointsCircle = pointProcessorCircle.getPoints();
+
+        // generate points for the fully random case
+        Circle pointProcessorRandom = new Circle(numberOfPoints, cMaxX, cMaxY);
+        pointProcessorRandom.run();
+        pointsRandom = pointProcessorRandom.getPoints();
     }
 
     /**
@@ -140,6 +150,28 @@ public class PointGenerators {
     public final void circlePointsAreNotOutOfRange() {
         for (int i = 0; i < numberOfPoints; i++) {
             Point p = pointsCircle.get(i);
+            assertTrue(p.getX() >= 0 && p.getX() <= cMaxX
+                && p.getY() >= 0 && p.getY() <= cMaxY);
+        }
+    }
+
+    /**
+     * Checks if the number of generated points matches the number of points we
+     * wanted to generate for the average case scenario.
+     */
+    @Test
+    public final void fullyRandomNumberOfPointsEqualsNumberOfGeneratedPoints() {
+        assertEquals(pointsRandom.size(), numberOfPoints);
+    }
+
+    /**
+     * Checks if the generated points (for the average case) are not outside of
+     * the given bounding box.
+     */
+    @Test
+    public final void fullyRandomPointsAreNotOutOfRange() {
+        for (int i = 0; i < numberOfPoints; i++) {
+            Point p = pointsRandom.get(i);
             assertTrue(p.getX() >= 0 && p.getX() <= cMaxX
                 && p.getY() >= 0 && p.getY() <= cMaxY);
         }
