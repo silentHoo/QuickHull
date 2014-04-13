@@ -100,11 +100,21 @@ public class Benchmark {
      *  - 2D average case (circle)
      */
     public final void runFullBenchmarkSuite() {
-        frame.updateLabel("1) Performing Benchmark for: 2D Best Case");
-        checkPerformance(BenchmarkType.BEST_CASE_2D);
+        frame.updateLabel("1) Performing Benchmark for: 2D Best Case"
+                + " (Recursive)");
+        checkPerformance(BenchmarkType.BEST_CASE_2D, false);
 
-        frame.updateLabel("2) Performing Benchmark for: 2D Average Case");
-        checkPerformance(BenchmarkType.AVG_CASE_2D);
+        frame.updateLabel("2) Performing Benchmark for: 2D Average Case"
+                + " (Recursive)");
+        checkPerformance(BenchmarkType.AVG_CASE_2D, false);
+
+        frame.updateLabel("1) Performing Benchmark for: 2D Best Case"
+                + " (Iterative)");
+        checkPerformance(BenchmarkType.BEST_CASE_2D, true);
+
+        frame.updateLabel("2) Performing Benchmark for: 2D Average Case"
+                + " (Iterative)");
+        checkPerformance(BenchmarkType.AVG_CASE_2D, true);
 
         frame.updateLabel("================== DONE ==================");
     }
@@ -120,8 +130,10 @@ public class Benchmark {
      *    average amounts of random points inside the rectangle.
      *
      *  @param type The benchmark type to check.
+     *  @param iterative Whether to check iterative or recursive.
      */
-    public final void checkPerformance(final BenchmarkType type) {
+    public final void checkPerformance(final BenchmarkType type,
+            final boolean iterative) {
         double[] elapsedRoundTimes = new double[BENCHMARK_ROUNDS];
         double averageTimeLast = 0.0;
 

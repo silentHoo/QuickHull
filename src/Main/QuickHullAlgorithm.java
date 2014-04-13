@@ -22,6 +22,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * This algorithm calculates the convex hull for a given set of points.
@@ -48,6 +49,15 @@ public class QuickHullAlgorithm {
      * The maximum left point.
      */
     private Point pointMinX;
+
+    /**
+     * Flag that indicates how the algorithm should work. Either imperative
+     * or recursive. You should use an iterative approach if your point set
+     * is very large. This will avoid stack overflows at a certain number of
+     * points. The number of stack overflow depends mainly on the structure of
+     * the points and the systems architecture (32/64 bit).
+     */
+    private final boolean iterativeProceeding;
 
     /**
      * Anonymous inner class which encapsulates a point and a distance.
@@ -83,6 +93,22 @@ public class QuickHullAlgorithm {
     public QuickHullAlgorithm(final ArrayList<Point> points) {
         inputPoints = points;
         hullPoints = new ArrayList<Point>(); // initial empty
+
+        iterativeProceeding = false;
+    }
+
+    /**
+     * Initializes the QuickHull algorithm with a point cloud.
+     *
+     * @param points The point cloud to put in.
+     * @param iterative Flag to indicate how the algorithm should work.
+     */
+    public QuickHullAlgorithm(final ArrayList<Point> points,
+            final boolean iterative) {
+        inputPoints = points;
+        hullPoints = new ArrayList<Point>(); // initial empty
+
+        iterativeProceeding = iterative;
     }
 
     /**
@@ -216,14 +242,32 @@ public class QuickHullAlgorithm {
      * @param first The first point of the line which is left of the right one.
      * @param second The second point of the line which is right of the first
      * one.
-     * @return A vector containing all the convex hull points on one side.
+     * @return A list containing all the convex hull points on one side.
      */
     private ArrayList<Point> quickHull(final ArrayList<Point> points,
             final Point first, final Point second) {
+        if (iterativeProceeding) {
+            return quickHullIterative(points, first, second);
+        } else {
+            return quickHullRecursive(points, first, second);
+        }
+    }
+
+    /**
+     * Rund the algorithm as a recursive variant.
+     *
+     * @param points The set of points to analyze.
+     * @param first The first point of the line which is left of the right one.
+     * @param second The second point of the line which is right of the first
+     * one.
+     * @return A list containing all the convex hull points on one side.
+     */
+    private ArrayList<Point> quickHullRecursive(final ArrayList<Point> points,
+            final Point first, final Point second) {
         ArrayList<PointDistance> pointsLeftOfLine = getPointDistances(points,
-            first, second);
+                    first, second);
         Point newMaxPoint = getPointWithMaximumDistanceFromLine(
-            pointsLeftOfLine);
+             pointsLeftOfLine);
 
         ArrayList<Point> pointsToReturn = new ArrayList<Point>();
         if (newMaxPoint == null) {
@@ -231,11 +275,64 @@ public class QuickHullAlgorithm {
         } else {
             ArrayList<Point> newPoints = new ArrayList<Point>();
             for (PointDistance pd : pointsLeftOfLine) {
-                newPoints.add(pd.p);
+               newPoints.add(pd.p);
             }
 
             pointsToReturn.addAll(quickHull(newPoints, first, newMaxPoint));
             pointsToReturn.addAll(quickHull(newPoints, newMaxPoint, second));
+        }
+
+        return pointsToReturn;
+    }
+
+    /**
+     * Rund the algorithm as a iterative variant.
+     *
+     * @param points The set of points to analyze.
+     * @param first The first point of the line which is left of the right one.
+     * @param second The second point of the line which is right of the first
+     * one.
+     * @return A list containing all the convex hull points on one side.
+     */
+    private ArrayList<Point> quickHullIterative(final ArrayList<Point> points,
+            final Point first, final Point second) {
+
+        Stack<QuickHullStackCapsule> stack = new Stack<QuickHullStackCapsule>();
+        stack.push(new QuickHullStackCapsule(points, first, second));
+
+        QuickHullStackCapsule currStackEntry;
+
+        ArrayList<Point> pointsToReturn = new ArrayList<Point>();
+        while (!stack.empty()) {
+            // SECTION: Restore Stack
+            currStackEntry = stack.pop();
+
+            ArrayList<Point> stackPoints = currStackEntry.getPointList();
+            Point stackFirstPoint = currStackEntry.getFirstPoint();
+            Point stackSecondPoint = currStackEntry.getSecondPoint();
+            // SECTION: Restore Stack
+
+           ArrayList<PointDistance> pointsLeftOfLine = getPointDistances(
+                   stackPoints, stackFirstPoint, stackSecondPoint);
+
+            Point newMaxPoint = getPointWithMaximumDistanceFromLine(
+                 pointsLeftOfLine);
+
+            if (newMaxPoint == null) {
+                pointsToReturn.add(stackSecondPoint);
+            } else {
+                ArrayList<Point> newPoints = new ArrayList<Point>();
+                for (PointDistance pd : pointsLeftOfLine) {
+                   newPoints.add(pd.p);
+                }
+
+                // instead of calling the function recursive push the
+                // current points to the stack
+                stack.push(new QuickHullStackCapsule(newPoints,
+                        stackFirstPoint, newMaxPoint));
+                stack.push(new QuickHullStackCapsule(newPoints,
+                        newMaxPoint, stackSecondPoint));
+            }
         }
 
         return pointsToReturn;

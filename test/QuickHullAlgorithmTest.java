@@ -32,7 +32,7 @@ public class QuickHullAlgorithmTest {
      * three hull points.
      */
     @Test
-    public final void check2DForThreeHullPoints() {
+    public final void check2DRecursiveForThreeHullPoints() {
         ArrayList<Point> points = new ArrayList<Point>();
 
         points.add(new Point(0, 0));
@@ -50,7 +50,7 @@ public class QuickHullAlgorithmTest {
      * four hull points.
      */
     @Test
-    public final void check2DForFourHullPoints() {
+    public final void check2DRecursiveForFourHullPoints() {
         ArrayList<Point> points = new ArrayList<Point>();
 
         points.add(new Point(0, 0));
@@ -69,7 +69,7 @@ public class QuickHullAlgorithmTest {
      * four hull points.
      */
     @Test
-    public final void check2DForSomeHullPointsWithInnerPoints() {
+    public final void check2DRecursiveForSomeHullPointsWithInnerPoints() {
         ArrayList<Point> points = new ArrayList<Point>();
 
         // outer points
@@ -89,6 +89,74 @@ public class QuickHullAlgorithmTest {
         points.add(new Point(9, 8));
 
         QuickHullAlgorithm qh = new QuickHullAlgorithm(points);
+        ArrayList<Point> outPoints = qh.getHullPoints();
+
+        // only four points must be in the hull list
+        assertEquals(4, outPoints.size());
+    }
+    
+    /**
+     * Test if three points placed as a triangle return
+     * three hull points.
+     */
+    @Test
+    public final void check2DIterativeForThreeHullPoints() {
+        ArrayList<Point> points = new ArrayList<Point>();
+
+        points.add(new Point(0, 0));
+        points.add(new Point(1, 0));
+        points.add(new Point(1, 1));
+
+        QuickHullAlgorithm qh = new QuickHullAlgorithm(points, true);
+        ArrayList<Point> outPoints = qh.getHullPoints();
+
+        assertEquals(3, outPoints.size());
+    }
+
+    /**
+     * Test if four points placed as a rectangle return
+     * four hull points.
+     */
+    @Test
+    public final void check2DIterativeForFourHullPoints() {
+        ArrayList<Point> points = new ArrayList<Point>();
+
+        points.add(new Point(0, 0));
+        points.add(new Point(1, 0));
+        points.add(new Point(1, 1));
+        points.add(new Point(0, 1));
+
+        QuickHullAlgorithm qh = new QuickHullAlgorithm(points, true);
+        ArrayList<Point> outPoints = qh.getHullPoints();
+
+        assertEquals(4, outPoints.size());
+    }
+
+    /**
+     * Test if four points placed as a rectangle return
+     * four hull points.
+     */
+    @Test
+    public final void check2DIterativeForSomeHullPointsWithInnerPoints() {
+        ArrayList<Point> points = new ArrayList<Point>();
+
+        // outer points
+        points.add(new Point(0, 0));
+        points.add(new Point(10, 0));
+        points.add(new Point(10, 10));
+        points.add(new Point(0, 10));
+
+        // inner points (diagonal)
+        points.add(new Point(2, 2));
+        points.add(new Point(3, 3));
+        points.add(new Point(4, 4));
+
+        // inner points (somewhere)
+        points.add(new Point(5, 2));
+        points.add(new Point(1, 9));
+        points.add(new Point(9, 8));
+
+        QuickHullAlgorithm qh = new QuickHullAlgorithm(points, true);
         ArrayList<Point> outPoints = qh.getHullPoints();
 
         // only four points must be in the hull list
