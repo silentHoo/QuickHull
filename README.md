@@ -6,13 +6,12 @@ This is for a university course.
 
 Features
 ========
-* Currently in development
+* 2D point support
+* Performance benchmarks based on multiple rounds of calculations
+* Nearly 100% Checkstyle conform (Oracle config)
+* 100% JavaDoc commented
+* JUnit tests
 
 Planned Features
 ================
-* Nearly 100% Checkstyle conform (Oracle config)
-* Nearly 100% code coverage
-* 100% JavaDoc commented
-* Many tests
-* Algorithm works on 2D and 3D point clouds
-* Performance benchmarks based on multiple rounds of calculations
+* 3D point support
